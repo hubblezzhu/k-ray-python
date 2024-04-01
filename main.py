@@ -62,7 +62,7 @@ def main():
     source_files = find_source_files(dir_path)
 
     # source_files = ["/root/linux_6_6/net/ipv4/tcp.c"]
-    # source_files = ["/root/linux_6_6/tools/build/feature/test-all.c"]
+    # source_files = ["/root/linux_6_6/lib/zstd/decompress/zstd_decompress_internal.h"]
 
     k_files = []
     for _file in source_files:

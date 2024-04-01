@@ -43,27 +43,36 @@ class K_File():
         ifdef_flag = False
 
         ifdef_stack = []
-        with open(self._path, 'r') as file:
+        with open(self._path, 'r', encoding="UTF-8") as file:
             l_if_sta = 0
             l_if_end = 0
             l_endif = 0
 
             for line in file:
+                # logging.debug("CODE: {}".format(line.strip()))
+
+                if "\\n\\" in line:
+                    line_number += 1
+                    continue
+
                 if backslash_flag and ifdef_flag:
                     ifmacro = ifdef_stack.pop()
                     ifmacro += " " + line.strip()
                     ifdef_stack.append(ifmacro)
                     l_if_end = line_number
 
-                # if line.strip().startswith("#if") or line.strip().startswith("# if"):
-                if line.startswith("#if") or line.startswith("# if") or line.startswith("#  if"):
+                if line.strip().startswith("#if") or \
+                    line.strip().startswith("# if") or \
+                    line.strip().startswith("#  if"):
+                    logging.debug("#if line: {}".format(line.strip()))
                     ifdef_flag = True
                     ifdef_stack.append(line.strip().strip("\\"))
                     l_if_sta = line_number
                     l_if_end = line_number
 
-                # if line.strip().startswith("#endif") or line.strip().startswith("# endif"):
-                if line.startswith("#endif") or line.startswith("# endif") or line.startswith("#  endif"):
+                if line.strip().startswith("#endif") or \
+                    line.strip().startswith("# endif") or \
+                    line.strip().startswith("#  endif"):
                     l_endif = line_number
                     ifmacro = ifdef_stack.pop()
                     # find a ifmacro, added to self._ifmacro_list
@@ -79,7 +88,7 @@ class K_File():
                 line_number += 1
 
         if ifdef_stack:
-            logging.FATAL("Unexpected ifdef stack error for path {}".format(self._path))
+            logging.fatal("Unexpected ifdef stack error for path {}".format(self._path))
 
 
     def get_relative_path(self):

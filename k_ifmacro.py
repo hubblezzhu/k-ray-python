@@ -29,6 +29,12 @@ class K_IfMacro():
     def get_configs(self):
         return self._configs
 
+    def set_line_end(self, line_end):
+        self._l_endif = line_end
+
+    def set_macro_str(self, macro_str):
+        self._str = macro_str
+
     def display(self):
         print(json.dumps({
                     "macro_str": self._str,
@@ -43,7 +49,6 @@ class K_IfMacro():
     def parse_config(self):
         pattern = re.compile(r'CONFIG_[_A-Za-z0-9]+')
         self._configs = pattern.findall(self._str)
-
 
 
 # Unit Test

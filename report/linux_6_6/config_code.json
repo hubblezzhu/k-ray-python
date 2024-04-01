@@ -1,0 +1,92 @@
+{
+    "CONFIG_ALPHA_GENERIC": [
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 107,
+            "line_end": 109
+        },
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 109,
+            "line_end": 121
+        }
+    ],
+    "CONFIG_ALPHA_XL": [
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 110,
+            "line_end": 112
+        },
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 112,
+            "line_end": 114
+        },
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 114,
+            "line_end": 116
+        },
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 116,
+            "line_end": 118
+        },
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 118,
+            "line_end": 120
+        }
+    ],
+    "CONFIG_ALPHA_RUFFIAN": [
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 112,
+            "line_end": 114
+        },
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 114,
+            "line_end": 116
+        },
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 116,
+            "line_end": 118
+        },
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 118,
+            "line_end": 120
+        }
+    ],
+    "CONFIG_ALPHA_SABLE": [
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 114,
+            "line_end": 116
+        },
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 116,
+            "line_end": 118
+        },
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 118,
+            "line_end": 120
+        }
+    ],
+    "CONFIG_ALPHA_ALCOR": [
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 116,
+            "line_end": 118
+        },
+        {
+            "path": "arch/alpha/include/asm/dma.h",
+            "line_start": 118,
+            "line_end": 120
+        }
+    ]
+}

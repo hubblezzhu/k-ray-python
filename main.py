@@ -52,7 +52,6 @@ def parse_config_func(k_files, archive_path):
     func_config_res = {}
     config_func_res = {}
     for _k_file in k_files:
-        file_path = _k_file.get_relative_path()
         func_config_relevance = _k_file.get_func_config_relevance()
 
         # add record to func config result
@@ -76,7 +75,26 @@ def parse_config_func(k_files, archive_path):
 
 
 def parse_config_code(k_files, archive_path):
-    pass
+    config_code_res = {}
+
+    for _k_file in k_files:
+        file_path = _k_file.get_relative_path()
+
+        for _ifmacro in _k_file.get_ifmacro_list():
+            for _config in _ifmacro.get_configs():
+                if _config not in config_code_res:
+                    config_code_res[_config] = []
+
+                _code_block = {
+                    "path": file_path,
+                    "line_start": _ifmacro.get_if_line_start(),
+                    "line_end": _ifmacro.get_endif_line()
+                }
+
+                config_code_res[_config].append(_code_block)
+
+    with open(os.path.join(archive_path, "config_code.json"), "w") as f:
+        json.dump(config_code_res, f, indent=4, default=set_default)
 
 
 def main():
@@ -91,6 +109,8 @@ def main():
 
     # source_files = ["/root/linux_6_6/net/ipv4/tcp.c"]
     # source_files = ["/root/linux_6_6/lib/zstd/decompress/zstd_decompress_internal.h"]
+    source_files = ["/root/linux_6_6/arch/alpha/include/asm/dma.h"]
+
 
     k_files = []
     for _file in source_files:

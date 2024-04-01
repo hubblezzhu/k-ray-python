@@ -67,28 +67,50 @@ class K_File():
 
                 if backslash_flag and ifdef_flag:
                     ifmacro = ifdef_stack.pop()
-                    ifmacro += " " + line.strip()
+                    ifmacro.set_macro_str("{} {}".format(ifmacro.get_name()), line.strip().strip("\\"))
+                    ifmacro.set_line_end(line_number)
                     ifdef_stack.append(ifmacro)
-                    l_if_end = line_number
 
                 if line.strip().startswith("#if") or \
                     line.strip().startswith("# if") or \
                     line.strip().startswith("#  if"):
                     # logging.debug("#if line: {}".format(line.strip()))
                     ifdef_flag = True
-                    ifdef_stack.append(line.strip().strip("\\"))
                     l_if_sta = line_number
                     l_if_end = line_number
+                    l_endif = line_number
+                    ifmacro_str = line.strip().strip("\\")
+                    ifmacro = K_IfMacro(ifmacro_str, l_if_sta, l_if_end, l_endif)
+                    ifdef_stack.append(ifmacro)
 
-                if line.strip().startswith("#endif") or \
+                elif line.strip().startswith("#endif") or \
                     line.strip().startswith("# endif") or \
                     line.strip().startswith("#  endif"):
-                    l_endif = line_number
                     ifmacro = ifdef_stack.pop()
-                    # find a ifmacro, added to self._ifmacro_list
-                    ifmacro = K_IfMacro(ifmacro, l_if_sta, l_if_end, l_endif)
+                    ifmacro.set_line_end(line_number)
                     ifmacro.parse_config()
                     self._ifmacro_list.append(ifmacro)
+                    ifdef_flag = False
+
+                elif line.strip().startswith("#else") or \
+                    line.strip().startswith("# else") or \
+                    line.strip().startswith("#  else") or \
+                    line.strip().startswith("#elif") or \
+                    line.strip().startswith("# elif") or \
+                    line.strip().startswith("#  elif"):
+                    # end last #if macro
+                    ifmacro = ifdef_stack.pop()
+                    ifmacro.set_line_end(line_number)
+                    ifmacro.parse_config()
+                    self._ifmacro_list.append(ifmacro)
+
+                    # start a new #if macro
+                    l_if_sta = line_number
+                    l_if_end = line_number
+                    l_endif = line_number
+                    ifmacro_str = "{} {}".format(ifmacro.get_name(), line.strip().strip("\\"))
+                    ifmacro = K_IfMacro(ifmacro_str, l_if_sta, l_if_end, l_endif)
+                    ifdef_stack.append(ifmacro)
 
                 if line.strip().endswith("\\"):
                     backslash_flag = True
@@ -101,8 +123,7 @@ class K_File():
         if ifdef_stack:
             logging.fatal("Unexpected ifdef stack error for path {}".format(self._path))
 
-
-    def is_relevant(self, k_func, k_ifmacro):
+    def _is_relevant(self, k_func, k_ifmacro):
         k_func_sta = k_func.get_line_start()
         k_func_end = k_func.get_line_end()
 
@@ -120,7 +141,7 @@ class K_File():
                 self._func_config_relevance[_func_name] = set()
 
             for _ifmacro in self._ifmacro_list:
-                if self.is_relevant(_func, _ifmacro):
+                if self._is_relevant(_func, _ifmacro):
                     for _config in _ifmacro.get_configs():
                         self._func_config_relevance[_func_name].add(_config)
 

@@ -62,12 +62,13 @@ def main():
     source_files = find_source_files(dir_path)
 
     # source_files = ["/root/linux_6_6/net/ipv4/tcp.c"]
+    # source_files = ["/root/linux_6_6/tools/build/feature/test-all.c"]
 
     k_files = []
     for _file in source_files:
         _k_file = K_File(_file, dir_path)
         _k_file.parse_func()
-        _k_file.parse_ifmacro()
+        # _k_file.parse_ifmacro()
 
         # print(_k_file.to_json_detail())
 

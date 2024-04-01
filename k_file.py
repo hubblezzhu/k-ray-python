@@ -56,7 +56,7 @@ class K_File():
                     ifdef_stack.append(ifmacro)
                     l_if_end = line_number
 
-                if line.strip().startswith("#if"):
+                if line.strip().startswith("#if") or line.strip().startswith("# if"):
                     ifdef_flag = True
                     ifdef_stack.append(line.strip().strip("\\"))
                     l_if_sta = line_number

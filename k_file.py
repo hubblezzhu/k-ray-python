@@ -51,6 +51,15 @@ class K_File():
             for line in file:
                 # logging.debug("CODE: {}".format(line.strip()))
 
+                # skip #ifdef, #endf in code generate, like "tools/bpf/bpftool/gen.c"
+                # 	codegen("\
+                #        \n\
+                #        #ifdef __cplusplus					    \n\
+                #        #undef _Static_assert					    \n\
+                #        #endif							    \n\
+                #        }							    \n\
+                #        ");
+                #
                 if "\\n\\" in line:
                     line_number += 1
                     continue
@@ -64,7 +73,7 @@ class K_File():
                 if line.strip().startswith("#if") or \
                     line.strip().startswith("# if") or \
                     line.strip().startswith("#  if"):
-                    logging.debug("#if line: {}".format(line.strip()))
+                    # logging.debug("#if line: {}".format(line.strip()))
                     ifdef_flag = True
                     ifdef_stack.append(line.strip().strip("\\"))
                     l_if_sta = line_number

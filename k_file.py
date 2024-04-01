@@ -39,7 +39,6 @@ class K_File():
 
     def parse_ifmacro(self):
         line_number = 1
-
         backslash_flag = False
         ifdef_flag = False
 
@@ -56,26 +55,26 @@ class K_File():
                     ifdef_stack.append(ifmacro)
                     l_if_end = line_number
 
-                if line.strip().startswith("#if") or line.strip().startswith("# if"):
+                # if line.strip().startswith("#if") or line.strip().startswith("# if"):
+                if line.startswith("#if") or line.startswith("# if") or line.startswith("#  if"):
                     ifdef_flag = True
                     ifdef_stack.append(line.strip().strip("\\"))
                     l_if_sta = line_number
                     l_if_end = line_number
 
-                if line.strip().startswith("#endif") or line.strip().startswith("# endif"):
+                # if line.strip().startswith("#endif") or line.strip().startswith("# endif"):
+                if line.startswith("#endif") or line.startswith("# endif") or line.startswith("#  endif"):
                     l_endif = line_number
                     ifmacro = ifdef_stack.pop()
                     # find a ifmacro, added to self._ifmacro_list
                     ifmacro = K_IfMacro(ifmacro, l_if_sta, l_if_end, l_endif)
                     self._ifmacro_list.append(ifmacro)
 
-
                 if line.strip().endswith("\\"):
                     backslash_flag = True
                 else:
                     backslash_flag = False
                     ifdef_flag = False
-
 
                 line_number += 1
 

@@ -9,10 +9,12 @@ import logging
 from k_file import K_File
 from k_ifmacro import K_IfMacro
 
+
 def set_default(obj):
     if isinstance(obj, set):
         return list(obj)
     raise TypeError
+
 
 def find_source_files(dir_path):
     source_files = []
@@ -23,7 +25,7 @@ def find_source_files(dir_path):
     return source_files
 
 
-def parse_path_func(k_files, src_version):
+def parse_path_func(k_files, archive_path):
     path_func_res = {}
     func_path_res = {}
     for _k_file in k_files:
@@ -39,14 +41,14 @@ def parse_path_func(k_files, src_version):
                 func_path_res[_func] = set()
             func_path_res[_func].add(file_path)
 
-    with open(os.path.join(src_version, "path_func.json"), "w") as f:
+    with open(os.path.join(archive_path, "path_func.json"), "w") as f:
         json.dump(path_func_res, f, indent=4, default=set_default)
 
-    with open(os.path.join(src_version, "func_path.json"), "w") as f:
+    with open(os.path.join(archive_path, "func_path.json"), "w") as f:
         json.dump(func_path_res, f, indent=4, default=set_default)
 
 
-def parse_config_func(k_files, src_version):
+def parse_config_func(k_files, archive_path):
     func_config_res = {}
     config_func_res = {}
     for _k_file in k_files:
@@ -66,18 +68,15 @@ def parse_config_func(k_files, src_version):
                 func_config_res[_func].add(_config)
                 config_func_res[_config].add(_func)
 
-
-    with open(os.path.join(src_version, "func_config.json"), "w") as f:
+    with open(os.path.join(archive_path, "func_config.json"), "w") as f:
         json.dump(func_config_res, f, indent=4, default=set_default)
 
-    with open(os.path.join(src_version, "config_func.json"), "w") as f:
+    with open(os.path.join(archive_path, "config_func.json"), "w") as f:
         json.dump(config_func_res, f, indent=4, default=set_default)
 
 
-
-def parse_config_code(k_files, src_version):
+def parse_config_code(k_files, archive_path):
     pass
-
 
 
 def main():
@@ -103,16 +102,18 @@ def main():
 
         k_files.append(_k_file)
 
-    if not os.path.exists(src_version):
-        os.makedirs(src_version)
+    archive_path = os.path.join("report", src_version)
+    if not os.path.exists(archive_path):
+        os.makedirs(archive_path)
 
-    parse_path_func(k_files, src_version)
-    parse_config_func(k_files, src_version)
-    parse_config_code(k_files, src_version)
+    parse_path_func(k_files, archive_path)
+    parse_config_func(k_files, archive_path)
+    parse_config_code(k_files, archive_path)
 
 
 def init():
     logging.basicConfig(level=logging.DEBUG)
+
 
 if __name__=="__main__":
     init()

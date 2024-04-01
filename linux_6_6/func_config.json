@@ -1,0 +1,154 @@
+{
+    "__tcp_alloc_md5sig_pool": [
+        "CONFIG_TCP_MD5SIG"
+    ],
+    "__tcp_cleanup_rbuf": [],
+    "__tcp_close": [],
+    "__tcp_sock_set_cork": [],
+    "__tcp_sock_set_nodelay": [],
+    "__tcp_sock_set_quickack": [],
+    "__tcp_splice_read": [],
+    "can_map_frag": [
+        "CONFIG_MMU"
+    ],
+    "do_tcp_getsockopt": [
+        "CONFIG_MMU"
+    ],
+    "do_tcp_setsockopt": [
+        "CONFIG_TCP_MD5SIG"
+    ],
+    "find_next_mappable_frag": [
+        "CONFIG_MMU"
+    ],
+    "find_tcp_vma": [
+        "CONFIG_MMU"
+    ],
+    "forced_push": [],
+    "receive_fallback_to_copy": [
+        "CONFIG_MMU"
+    ],
+    "retrans_to_secs": [],
+    "secs_to_retrans": [],
+    "set_thash_entries": [],
+    "skb_advance_to_frag": [
+        "CONFIG_MMU"
+    ],
+    "tcp_abort": [],
+    "tcp_alloc_md5sig_pool": [
+        "CONFIG_TCP_MD5SIG"
+    ],
+    "tcp_bpf_bypass_getsockopt": [],
+    "tcp_can_repair_sock": [],
+    "tcp_check_oom": [],
+    "tcp_cleanup_rbuf": [],
+    "tcp_close": [],
+    "tcp_close_state": [],
+    "tcp_compute_delivery_rate": [],
+    "tcp_copy_straggler_data": [
+        "CONFIG_MMU"
+    ],
+    "tcp_disconnect": [],
+    "tcp_done": [],
+    "tcp_downgrade_zcopy_pure": [],
+    "tcp_eat_recv_skb": [],
+    "tcp_enable_tx_delay": [],
+    "tcp_enter_memory_pressure": [],
+    "tcp_free_fastopen_req": [],
+    "tcp_get_info": [],
+    "tcp_get_info_chrono_stats": [],
+    "tcp_get_md5sig_pool": [
+        "CONFIG_TCP_MD5SIG"
+    ],
+    "tcp_get_timestamping_opt_stats": [],
+    "tcp_getsockopt": [],
+    "tcp_inbound_md5_hash": [
+        "CONFIG_TCP_MD5SIG"
+    ],
+    "tcp_init": [],
+    "tcp_init_mem": [],
+    "tcp_init_sock": [],
+    "tcp_inq_hint": [],
+    "tcp_ioctl": [],
+    "tcp_leave_memory_pressure": [],
+    "tcp_mark_push": [],
+    "tcp_mark_urg": [],
+    "tcp_md5_hash_key": [
+        "CONFIG_TCP_MD5SIG"
+    ],
+    "tcp_md5_hash_skb_data": [
+        "CONFIG_TCP_MD5SIG"
+    ],
+    "tcp_mmap": [
+        "CONFIG_MMU"
+    ],
+    "tcp_need_reset": [],
+    "tcp_opt_stats_get_size": [],
+    "tcp_orphan_count_sum": [],
+    "tcp_orphan_update": [],
+    "tcp_peek_len": [],
+    "tcp_peek_sndq": [],
+    "tcp_poll": [],
+    "tcp_push": [],
+    "tcp_read_done": [],
+    "tcp_read_skb": [],
+    "tcp_read_sock": [],
+    "tcp_recv_skb": [],
+    "tcp_recv_timestamp": [],
+    "tcp_recv_urg": [],
+    "tcp_recvmsg": [],
+    "tcp_recvmsg_locked": [],
+    "tcp_remove_empty_skb": [],
+    "tcp_repair_options_est": [],
+    "tcp_repair_set_window": [],
+    "tcp_rtx_queue_purge": [],
+    "tcp_send_mss": [],
+    "tcp_sendmsg": [],
+    "tcp_sendmsg_fastopen": [],
+    "tcp_sendmsg_locked": [],
+    "tcp_set_rcvlowat": [],
+    "tcp_set_state": [],
+    "tcp_set_window_clamp": [],
+    "tcp_setsockopt": [],
+    "tcp_should_autocork": [],
+    "tcp_shutdown": [],
+    "tcp_skb_entail": [],
+    "tcp_skb_ttl_or_hop_limit": [],
+    "tcp_sock_set_cork": [],
+    "tcp_sock_set_keepcnt": [],
+    "tcp_sock_set_keepidle": [],
+    "tcp_sock_set_keepidle_locked": [],
+    "tcp_sock_set_keepintvl": [],
+    "tcp_sock_set_nodelay": [],
+    "tcp_sock_set_quickack": [],
+    "tcp_sock_set_syncnt": [],
+    "tcp_sock_set_user_timeout": [],
+    "tcp_splice_data_recv": [],
+    "tcp_splice_eof": [],
+    "tcp_splice_read": [],
+    "tcp_stream_alloc_skb": [],
+    "tcp_stream_is_readable": [],
+    "tcp_too_many_orphans": [],
+    "tcp_tx_timestamp": [],
+    "tcp_update_recv_tstamps": [],
+    "tcp_wmem_schedule": [],
+    "tcp_write_queue_purge": [],
+    "tcp_xmit_size_goal": [],
+    "tcp_zc_finalize_rx_tstamp": [
+        "CONFIG_MMU"
+    ],
+    "tcp_zc_handle_leftover": [
+        "CONFIG_MMU"
+    ],
+    "tcp_zerocopy_receive": [
+        "CONFIG_MMU"
+    ],
+    "tcp_zerocopy_set_hint_for_skb": [
+        "CONFIG_MMU"
+    ],
+    "tcp_zerocopy_vm_insert_batch": [
+        "CONFIG_MMU"
+    ],
+    "tcp_zerocopy_vm_insert_batch_error": [
+        "CONFIG_MMU"
+    ]
+}

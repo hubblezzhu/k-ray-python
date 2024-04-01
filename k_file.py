@@ -15,6 +15,7 @@ class K_File():
 
         self._func_list = []
         self._ifmacro_list = []
+        self._func_config_relevance = {}
 
 
     def parse_func(self):
@@ -86,6 +87,7 @@ class K_File():
                     ifmacro = ifdef_stack.pop()
                     # find a ifmacro, added to self._ifmacro_list
                     ifmacro = K_IfMacro(ifmacro, l_if_sta, l_if_end, l_endif)
+                    ifmacro.parse_config()
                     self._ifmacro_list.append(ifmacro)
 
                 if line.strip().endswith("\\"):
@@ -100,9 +102,30 @@ class K_File():
             logging.fatal("Unexpected ifdef stack error for path {}".format(self._path))
 
 
+    def is_relevant(self, k_func, k_ifmacro):
+        k_func_sta = k_func.get_line_start()
+        k_func_end = k_func.get_line_end()
+
+        k_ifmacro_sta = k_ifmacro.get_if_line_start()
+        k_ifmacro_end = k_ifmacro.get_endif_line()
+
+        if (max(k_func_sta, k_ifmacro_sta) < min(k_func_end, k_ifmacro_end)):
+            return True
+        return False
+
+    def parse_func_config_relevance(self):
+        for _func in self._func_list:
+            _func_name = _func.get_name()
+            if _func_name not in self._func_config_relevance:
+                self._func_config_relevance[_func_name] = set()
+
+            for _ifmacro in self._ifmacro_list:
+                if self.is_relevant(_func, _ifmacro):
+                    for _config in _ifmacro.get_configs():
+                        self._func_config_relevance[_func_name].add(_config)
+
     def get_relative_path(self):
         return self._path.replace(self._dir_path, '', 1).strip("/")
-
 
     def get_ifmacro_list(self):
         return self._ifmacro_list
@@ -110,6 +133,8 @@ class K_File():
     def get_func_list(self):
         return self._func_list
 
+    def get_func_config_relevance(self):
+        return self._func_config_relevance
 
     def to_dict(self):
         res = {}
@@ -122,7 +147,6 @@ class K_File():
         macro_list = []
         for _ifmacro in self._ifmacro_list:
             macro_list.append(_ifmacro.get_name())
-
 
         res["functions"] = func_list
         res["ifmacros"] = macro_list

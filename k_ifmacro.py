@@ -45,6 +45,7 @@ class K_IfMacro():
         self._configs = pattern.findall(self._str)
 
 
+
 # Unit Test
 if __name__=="__main__":
 

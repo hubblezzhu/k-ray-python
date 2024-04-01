@@ -18,7 +18,7 @@ class K_File():
 
 
     def parse_func(self):
-        _cmd = "ctags --fields=ne --c-types=f -o - {}".format(self._path)
+        _cmd = "/usr/bin/ctags --fields=ne --c-types=f -o - {}".format(self._path)
         logging.debug("[Run CMD] {}".format(_cmd))
         _out = os.popen(_cmd).readlines()
         for _line in _out:

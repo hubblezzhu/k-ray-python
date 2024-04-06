@@ -2,6 +2,7 @@
 import os
 import sys
 import json
+import re
 import logging
 
 from k_ifmacro import K_IfMacro
@@ -40,6 +41,18 @@ class K_File():
 
             _func = K_Func(self._path, _func_name, _line_sta, _line_end)
             self._func_list.append(_func)
+
+
+    def _format_line(self, line):
+        macro_str = line.strip().strip("\\")
+        # erase string between /* and */
+        macro_str = re.sub(r'/\*.*?\*/', '', macro_str)
+        # erase string after /*
+        macro_str = re.sub(r'/\*.*', '', macro_str)
+        # erase string after //
+        macro_str = re.sub(r'//.*', '', macro_str)
+
+        return macro_str
 
 
     def parse_ifmacro(self):
@@ -82,7 +95,7 @@ class K_File():
                     l_if_sta = line_number
                     l_if_end = line_number
                     l_endif = line_number
-                    ifmacro_str = line.strip().strip("\\")
+                    ifmacro_str = self._format_line(line)
                     ifdef_stack.append(ifmacro_str)
 
                 elif line.strip().startswith("#endif") or \
@@ -112,7 +125,7 @@ class K_File():
                     l_if_sta = line_number
                     l_if_end = line_number
                     l_endif = line_number
-                    ifmacro_str = "!({}) && {}".format(ifmacro_str, line.strip().strip("\\"))
+                    ifmacro_str = "!({}) && {}".format(ifmacro_str, self._format_line(line))
                     ifdef_stack.append(ifmacro_str)
                     ifdef_flag = True
 
@@ -137,7 +150,7 @@ class K_File():
 
                 elif backslash_flag and ifdef_flag:
                     ifmacro_str = ifdef_stack.pop()
-                    ifmacro_str = "{} {}".format(ifmacro_str, line.strip().strip("\\"))
+                    ifmacro_str = "{} {}".format(ifmacro_str, self._format_line(line))
                     ifdef_stack.append(ifmacro_str)
 
                 if line.strip().endswith("\\"):

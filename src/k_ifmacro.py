@@ -111,6 +111,7 @@ class K_IfMacro():
             "IS_REACHABLE",
             "__HAS_BUILT_IN",
             "__has_attribute",
+            "__has_builtin",
             "\t",
             "\n",
         ]
@@ -131,24 +132,19 @@ class K_IfMacro():
                 macro_str = replace_whole_word(macro_str, _symbol, "0")
 
         # operator
-        macro_str = macro_str.replace("&&", "and")
-        macro_str = macro_str.replace("||", "or")
-        macro_str = macro_str.replace("==", "or")
-        macro_str = macro_str.replace("!=", "or")
+        macro_str = macro_str.replace("&&", " and ")
+        macro_str = macro_str.replace("||", " or ")
+        macro_str = macro_str.replace("==", " or ")
+        macro_str = macro_str.replace("!=", " or ")
 
-        macro_str = macro_str.replace("<=", "or")
-        macro_str = macro_str.replace(">=", "or")
-        macro_str = macro_str.replace("<<", "or")
-        macro_str = macro_str.replace(">>", "or")
+        macro_str = macro_str.replace("<=", " or ")
+        macro_str = macro_str.replace(">=", " or ")
+        macro_str = macro_str.replace("<<", " or ")
+        macro_str = macro_str.replace(">>", " or ")
 
-        macro_str = macro_str.replace("<", "or")
-        macro_str = macro_str.replace(">", "or")
+        macro_str = macro_str.replace("<", " or ")
+        macro_str = macro_str.replace(">", " or ")
         macro_str = macro_str.replace("!", " not ")
-
-        # erase string between /* and */
-        macro_str = re.sub(r'/\*.*?\*/', '', macro_str)
-        # erase string after //
-        macro_str = re.sub(r'//.*', '', macro_str)
 
         try:
             _value = eval(macro_str)

@@ -167,6 +167,7 @@ def main():
     source_files = find_source_files(src_path)
 
     # source_files = ["/root/linux_6_6/arch/ia64/include/asm/pgtable.h"]
+    # source_files = ["/root/linux_6_6/drivers/video/fbdev/aty/radeon_pm.c"]
 
     k_files = []
     for _file in source_files:

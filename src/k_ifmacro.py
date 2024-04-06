@@ -133,8 +133,15 @@ class K_IfMacro():
         # operator
         macro_str = macro_str.replace("&&", "and")
         macro_str = macro_str.replace("||", "or")
-        macro_str = macro_str.replace("!", " not ")
         macro_str = macro_str.replace("==", "or")
+        macro_str = macro_str.replace("!=", "or")
+
+        macro_str = macro_str.replace("<=", "or")
+        macro_str = macro_str.replace(">=", "or")
+
+        macro_str = macro_str.replace("<", "or")
+        macro_str = macro_str.replace(">", "or")
+        macro_str = macro_str.replace("!", " not ")
 
         # erase string between /* and */
         macro_str = re.sub(r'/\*.*?\*/', '', macro_str)

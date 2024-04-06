@@ -122,7 +122,8 @@ class K_IfMacro():
         for _symbol in macro_symbols:
             if _symbol in arch_configs:
                 macro_str = replace_whole_word(macro_str, _symbol, "1")
-                self._arch_related_configs.append(_config)
+                if macro_str not in self._arch_related_configs:
+                    self._arch_related_configs.append(_symbol)
             else:
                 macro_str = replace_whole_word(macro_str, _symbol, "0")
 
@@ -139,8 +140,8 @@ class K_IfMacro():
 
         try:
             _value = eval(macro_str)
-            logging.debug("Macro Str: {}".format(self._str))
-            logging.debug("Value: {}".format(_value))
+            # logging.debug("Macro Str: {}".format(self._str))
+            # logging.debug("Value: {}".format(_value))
             if _value:
                 self._is_arch_relative = True
         except Exception as e:

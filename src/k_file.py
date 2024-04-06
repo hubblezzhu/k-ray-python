@@ -114,14 +114,15 @@ class K_File():
                     l_endif = line_number
                     ifmacro_str = "!({}) && {}".format(ifmacro_str, line.strip().strip("\\"))
                     ifdef_stack.append(ifmacro_str)
+                    ifdef_flag = True
 
                 elif line.strip().startswith("#else") or \
                     line.strip().startswith("# else") or \
                     line.strip().startswith("#  else"):
                     # end last #if macro
-                    ifmacro_str = " && ".join(ifdef_stack)
+                    complete_ifmacro_str = " && ".join(ifdef_stack)
                     l_endif = line_number
-                    ifmacro = K_IfMacro(ifmacro_str, l_if_sta, l_if_end, l_endif)
+                    ifmacro = K_IfMacro(complete_ifmacro_str, l_if_sta, l_if_end, l_endif)
                     ifmacro.parse_config()
                     self._ifmacro_list.append(ifmacro)
 
@@ -132,10 +133,11 @@ class K_File():
                     l_endif = line_number
                     ifmacro_str = "!({})".format(ifmacro_str)
                     ifdef_stack.append(ifmacro_str)
+                    ifdef_flag = True
 
                 elif backslash_flag and ifdef_flag:
                     ifmacro_str = ifdef_stack.pop()
-                    ifmacro_str = "{} {}".format(ifmacro.get_name(), line.strip().strip("\\"))
+                    ifmacro_str = "{} {}".format(ifmacro_str, line.strip().strip("\\"))
                     ifdef_stack.append(ifmacro_str)
 
                 if line.strip().endswith("\\"):

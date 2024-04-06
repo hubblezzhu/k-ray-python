@@ -45,7 +45,6 @@ def parse_path_func(k_files, archive_path):
 
         # add record to path func result
         path_func_res[file_path] = func_list
-
         # add record to func path result
         for _func in func_list:
             if _func not in func_path_res:
@@ -92,6 +91,7 @@ def parse_config_code(k_files, archive_path):
         file_path = _k_file.get_relative_path()
 
         for _ifmacro in _k_file.get_ifmacro_list():
+            # print(_ifmacro.get_name())
             for _config in _ifmacro.get_configs():
                 if _config not in config_code_res:
                     config_code_res[_config] = []
@@ -129,7 +129,6 @@ def parse_arch_related_config_code(k_files, archive_path, arch):
 
 def parse_arch_related_config_file(archive_path, arch, dir_path):
     config_file_res = {}
-
     kbuildparse = "../3rd/kbuildparser/kbuildparser"
 
     dir_path = os.path.relpath(dir_path, start="./")
@@ -167,7 +166,7 @@ def main():
     src_version = args.src_name
     source_files = find_source_files(src_path)
 
-    source_files = ["/root/linux_6_6/arch/alpha/include/asm/irq.h"]
+    # source_files = ["/root/linux_6_6/arch/alpha/include/asm/irq.h"]
 
     k_files = []
     for _file in source_files:

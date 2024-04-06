@@ -115,7 +115,7 @@ class K_File():
                     l_if_sta = line_number
                     l_if_end = line_number
                     l_endif = line_number
-                    ifmacro_str = "not ({}) && {}".format(ifmacro.get_name(), line.strip().strip("\\"))
+                    ifmacro_str = "!({}) && {}".format(ifmacro.get_name(), line.strip().strip("\\"))
                     ifmacro = K_IfMacro(ifmacro_str, l_if_sta, l_if_end, l_endif)
                     ifdef_stack.append(ifmacro)
 
@@ -133,7 +133,7 @@ class K_File():
                     l_if_sta = line_number
                     l_if_end = line_number
                     l_endif = line_number
-                    ifmacro_str = "not ({})".format(ifmacro.get_name())
+                    ifmacro_str = "!({})".format(ifmacro.get_name())
                     ifmacro = K_IfMacro(ifmacro_str, l_if_sta, l_if_end, l_endif)
                     ifdef_stack.append(ifmacro)
 

@@ -68,7 +68,7 @@ class K_IfMacro():
         self._configs = pattern.findall(self._str)
 
     def parse_arch_relevance(self, arch_configs):
-        # if macro not contain configs, it's not related with architecture
+        # if macro not contain any configs, it's not related with architecture
         # if macro not contain arch configs, it's not related with architecture
         contain_arch_config = False
         for _config in self._configs:
@@ -83,7 +83,7 @@ class K_IfMacro():
             "#ifndef",
         ]
         for _symbol in negtive_symbols:
-            macro_str = macro_str.replace(_symbol, " not ")
+            macro_str = macro_str.replace(_symbol, "!")
 
         # postive string
         positive_symbols = [
@@ -118,19 +118,24 @@ class K_IfMacro():
         pattern = re.compile(r'[_A-Za-z0-9]+')
         macro_symbols = pattern.findall(macro_str)
 
-        # config value replace
-        for _symbols in macro_symbols:
-            if _symbols in arch_configs:
-                macro_str = replace_whole_word(macro_str, _symbols, "1")
+        # symbol value replace
+        for _symbol in macro_symbols:
+            if _symbol in arch_configs:
+                macro_str = replace_whole_word(macro_str, _symbol, "1")
                 self._arch_related_configs.append(_config)
             else:
-                macro_str = replace_whole_word(macro_str, _symbols, "0")
+                macro_str = replace_whole_word(macro_str, _symbol, "0")
 
         # operator
         macro_str = macro_str.replace("&&", "and")
         macro_str = macro_str.replace("||", "or")
         macro_str = macro_str.replace("!", " not ")
         macro_str = macro_str.replace("==", "or")
+
+        # erase string between /* and */
+        macro_str = re.sub(r'/\*.*?\*/', '', macro_str)
+        # erase string after //
+        macro_str = re.sub(r'//.*', '', macro_str)
 
         try:
             _value = eval(macro_str)

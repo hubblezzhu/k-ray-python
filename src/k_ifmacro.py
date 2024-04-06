@@ -138,6 +138,8 @@ class K_IfMacro():
 
         macro_str = macro_str.replace("<=", "or")
         macro_str = macro_str.replace(">=", "or")
+        macro_str = macro_str.replace("<<", "or")
+        macro_str = macro_str.replace(">>", "or")
 
         macro_str = macro_str.replace("<", "or")
         macro_str = macro_str.replace(">", "or")
@@ -161,7 +163,7 @@ class K_IfMacro():
             logging.error("Macro string: ")
             logging.error(macro_str)
             logging.error(f"Error evaluating macro string: {e}")
-            sys.exit()
+            sys.exit(1)
 
     def get_pos_config_list(self):
         return self._postive_configs

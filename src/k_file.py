@@ -153,7 +153,7 @@ class K_File():
             logging.error("Unexpected ifdef stack error for path {}".format(self._path))
             for _ifmacro in ifdef_stack[::-1]:
                 logging.error("ifmacro str in stack: {}".format(_ifmacro.get_name()))
-            sys.exit()
+            sys.exit(1)
 
     def _is_relevant(self, k_func, k_ifmacro):
         k_func_sta = k_func.get_line_start()

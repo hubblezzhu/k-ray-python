@@ -133,9 +133,7 @@ def main():
     parser.add_argument("-p", "--src-path", help="Path to the source dir")
     parser.add_argument("-n", "--src-name", help="Source version")
     parser.add_argument("-r", '--relate-arch', action='store_true', required=False, help="parse configs reletive to arch")
-    parser.add_argument("-c", '--configs', required=False, help="arch reletive configs")
-    parser.add_argument("-A", '--arch-config', required=False, help="Specify architecture")
-
+    parser.add_argument("-c", '--config-file', required=False, help="arch reletive configs")
 
     args = parser.parse_args()
 
@@ -163,10 +161,15 @@ def main():
 
     ## find code relative to arch
     if args.relate_arch:
-        arch_configs = find_configs(args.configs)
-        for _k_file in k_files:
-            _k_file.parse_code_arch_relevance(arch_configs)
-        parse_arch_releated_config_code(k_files, archive_path, args.arch)
+        with open(args.config_file, "r") as config_file:
+            arch_dicts = json.load(config_file)
+            for arch in arch_dicts:
+                arch_config_file_path = arch_dicts[arch]
+                arch_configs = find_configs(_arch_config_file_path)
+                for _k_file in k_files:
+                    _k_file.parse_code_arch_relevance(arch_configs)
+
+                parse_arch_releated_config_code(k_files, archive_path, arch)
 
 
 def init():

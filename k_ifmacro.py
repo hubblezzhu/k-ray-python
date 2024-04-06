@@ -74,7 +74,7 @@ class K_IfMacro():
         macro_str = self._str
         # negtive string
         negtive_symbols = [
-            "ifn",
+            "#ifndef",
         ]
         for _symbol in negtive_symbols:
             macro_str = macro_str.replace(_symbol, " not ")

@@ -114,21 +114,23 @@ class K_IfMacro():
         for _symbol in positive_symbols:
             macro_str = macro_str.replace(_symbol, "")
 
+        # get symbols
+        pattern = re.compile(r'[_A-Za-z0-9]+')
+        macro_symbols = pattern.findall(macro_str)
+
         # config value replace
-        for _config in self._configs:
+        for _symbols in macro_symbols:
             if _config in arch_configs:
-                # macro_str = macro_str.replace(_config, "1")
                 macro_str = replace_whole_word(macro_str, _config, "1")
                 self._arch_related_configs.append(_config)
             else:
-                # macro_str = macro_str.replace(_config, "0")
                 macro_str = replace_whole_word(macro_str, _config, "0")
 
         # operator
         macro_str = macro_str.replace("&&", "and")
         macro_str = macro_str.replace("||", "or")
         macro_str = macro_str.replace("!", " not ")
-        macro_str = macro_str.replace("==", "and")
+        macro_str = macro_str.replace("==", "or")
 
         try:
             _value = eval(macro_str)

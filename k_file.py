@@ -71,7 +71,7 @@ class K_File():
 
                 # skip for drivers/scsi/qla1280.c
                 # #ifdef QL_DEBUG_LEVEL_3/#endif around ENTER()/LEAVE() calls
-                if "#if" in line and "#endif" in line:
+                if "#ifdef QL_DEBUG_LEVEL_3/#endif around ENTER()/LEAVE() calls" in line:
                     line_number += 1
                     continue
 

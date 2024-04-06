@@ -121,10 +121,10 @@ class K_IfMacro():
         # config value replace
         for _symbols in macro_symbols:
             if _symbols in arch_configs:
-                macro_str = replace_whole_word(macro_str, _config, "1")
+                macro_str = replace_whole_word(macro_str, _symbols, "1")
                 self._arch_related_configs.append(_config)
             else:
-                macro_str = replace_whole_word(macro_str, _config, "0")
+                macro_str = replace_whole_word(macro_str, _symbols, "0")
 
         # operator
         macro_str = macro_str.replace("&&", "and")

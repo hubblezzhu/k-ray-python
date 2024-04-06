@@ -119,6 +119,7 @@ class K_IfMacro():
         # operator
         macro_str = macro_str.replace("&&", "and")
         macro_str = macro_str.replace("||", "or")
+        macro_str = macro_str.replace("!", " not ")
 
         # logging.debug("==============")
         # logging.debug("Original string:")

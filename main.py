@@ -146,9 +146,9 @@ def main():
     k_files = []
     for _file in source_files:
         _k_file = K_File(_file, src_path)
-        _k_file.parse_func()
+        # _k_file.parse_func()
         _k_file.parse_ifmacro()
-        _k_file.parse_func_config_relevance()
+        # _k_file.parse_func_config_relevance()
 
         k_files.append(_k_file)
 

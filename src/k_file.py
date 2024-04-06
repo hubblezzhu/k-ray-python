@@ -75,69 +75,68 @@ class K_File():
                     line_number += 1
                     continue
 
-                if backslash_flag and ifdef_flag:
-                    ifmacro = ifdef_stack.pop()
-                    ifmacro.set_macro_str("{} {}".format(ifmacro.get_name(), line.strip().strip("\\")))
-                    ifmacro.set_line_end(line_number)
-                    ifdef_stack.append(ifmacro)
-                    line_number += 1
-                    continue
-
                 if line.strip().startswith("#if") or \
                     line.strip().startswith("# if") or \
                     line.strip().startswith("#  if"):
-                    # logging.debug("#if line: {}".format(line.strip()))
                     ifdef_flag = True
                     l_if_sta = line_number
                     l_if_end = line_number
                     l_endif = line_number
                     ifmacro_str = line.strip().strip("\\")
-                    ifmacro = K_IfMacro(ifmacro_str, l_if_sta, l_if_end, l_endif)
-                    ifdef_stack.append(ifmacro)
+                    ifdef_stack.append(ifmacro_str)
 
                 elif line.strip().startswith("#endif") or \
                     line.strip().startswith("# endif") or \
                     line.strip().startswith("#  endif"):
-                    ifmacro = ifdef_stack.pop()
-                    ifmacro.set_line_end(line_number)
+
+                    complete_ifmacro_str = " && ".join(ifdef_stack)
+                    l_endif = line_number
+                    ifmacro = K_IfMacro(complete_ifmacro_str, l_if_sta, l_if_end, l_endif)
                     ifmacro.parse_config()
                     self._ifmacro_list.append(ifmacro)
+                    ifdef_stack.pop()
                     ifdef_flag = False
 
                 elif line.strip().startswith("#elif") or \
                     line.strip().startswith("# elif") or \
                     line.strip().startswith("#  elif"):
                     # end last #if macro
-                    ifmacro = ifdef_stack.pop()
-                    ifmacro.set_line_end(line_number)
+                    complete_ifmacro_str = " && ".join(ifdef_stack)
+                    l_endif = line_number
+                    ifmacro = K_IfMacro(complete_ifmacro_str, l_if_sta, l_if_end, l_endif)
                     ifmacro.parse_config()
                     self._ifmacro_list.append(ifmacro)
 
+                    ifmacro_str = ifdef_stack.pop()
                     # start a new #if macro
                     l_if_sta = line_number
                     l_if_end = line_number
                     l_endif = line_number
-                    ifmacro_str = "!({}) && {}".format(ifmacro.get_name(), line.strip().strip("\\"))
-                    ifmacro = K_IfMacro(ifmacro_str, l_if_sta, l_if_end, l_endif)
-                    ifdef_stack.append(ifmacro)
+                    ifmacro_str = "!({}) && {}".format(ifmacro_str, line.strip().strip("\\"))
+                    ifdef_stack.append(ifmacro_str)
 
                 elif line.strip().startswith("#else") or \
                     line.strip().startswith("# else") or \
                     line.strip().startswith("#  else"):
-
                     # end last #if macro
-                    ifmacro = ifdef_stack.pop()
-                    ifmacro.set_line_end(line_number)
+                    ifmacro_str = " && ".join(ifdef_stack)
+                    l_endif = line_number
+                    ifmacro = K_IfMacro(ifmacro_str, l_if_sta, l_if_end, l_endif)
                     ifmacro.parse_config()
                     self._ifmacro_list.append(ifmacro)
 
+                    ifmacro_str = ifdef_stack.pop()
                     # start a new #if macro
                     l_if_sta = line_number
                     l_if_end = line_number
                     l_endif = line_number
-                    ifmacro_str = "!({})".format(ifmacro.get_name())
-                    ifmacro = K_IfMacro(ifmacro_str, l_if_sta, l_if_end, l_endif)
-                    ifdef_stack.append(ifmacro)
+                    ifmacro_str = "!({})".format(ifmacro_str)
+                    ifdef_stack.append(ifmacro_str)
+
+                elif backslash_flag and ifdef_flag:
+                    ifmacro_str = ifdef_stack.pop()
+                    ifmacro_str = "{} {}".format(ifmacro.get_name(), line.strip().strip("\\"))
+                    ifdef_stack.append(ifmacro_str)
 
                 if line.strip().endswith("\\"):
                     backslash_flag = True

@@ -167,7 +167,7 @@ def main():
     src_version = args.src_name
     source_files = find_source_files(src_path)
 
-    # source_files = ["/root/linux_6_6/arch/alpha/include/asm/irq.h"]
+    source_files = ["/root/linux_6_6/arch/alpha/include/asm/irq.h"]
 
     k_files = []
     for _file in source_files:
@@ -191,7 +191,6 @@ def main():
         with open(args.config_file, "r") as config_file:
             arch_dicts = json.load(config_file)
             for arch in arch_dicts:
-
                 # parse code block relative to arch
                 arch_config_file_path = arch_dicts[arch]
                 arch_configs = find_configs(arch_config_file_path)

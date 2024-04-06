@@ -70,7 +70,7 @@ class K_File():
 
                 if backslash_flag and ifdef_flag:
                     ifmacro = ifdef_stack.pop()
-                    ifmacro.set_macro_str("{} {}".format(ifmacro.get_name()), line.strip().strip("\\"))
+                    ifmacro.set_macro_str("{} {}".format(ifmacro.get_name(), line.strip().strip("\\")))
                     ifmacro.set_line_end(line_number)
                     ifdef_stack.append(ifmacro)
 

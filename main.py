@@ -25,6 +25,15 @@ def find_source_files(dir_path):
     return source_files
 
 
+def find_configs(config_file_path):
+    configs = []
+    with open(config_file_path, 'r') as file:
+        for line in file:
+            configs.append(line.strip())
+
+    return configs
+
+
 def parse_path_func(k_files, archive_path):
     path_func_res = {}
     func_path_res = {}
@@ -97,28 +106,49 @@ def parse_config_code(k_files, archive_path):
         json.dump(config_code_res, f, indent=4, default=set_default)
 
 
+def parse_arch_releated_config_code(k_files, archive_path):
+    config_code_res = []
+
+    for _k_file in k_files:
+        file_path = _k_file.get_relative_path()
+
+        for _ifmacro in _k_file.get_arch_ifmacro_list():
+            _code_block = {
+                "path": file_path,
+                "line_start": _ifmacro.get_if_line_start(),
+                "line_end": _ifmacro.get_endif_line(),
+                "arch_related_configs": _ifmacro.get_arch_related_configs()
+            }
+            config_code_res.append(_code_block)
+
+    with open(os.path.join(archive_path, "arch_releated_config_code.json"), "w") as f:
+        json.dump(config_code_res, f, indent=4, default=set_default)
+
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("dir_path", help="Path to the source dir")
-    parser.add_argument("src_version", help="Dir to save result")
+    parser.add_argument("-p", "--src-path", help="Path to the source dir")
+    parser.add_argument("-n", "--src-name", help="Source version")
+    parser.add_argument("-r", '--relate-arch', action='store_true', required=False, help="parse configs reletive to arch")
+    parser.add_argument("-c", '--configs', required=False, help="arch reletive configs")
+
     args = parser.parse_args()
 
-    dir_path = args.dir_path
-    src_version = args.src_version
-    source_files = find_source_files(dir_path)
+    src_path = args.src_path
+    src_version = args.src_name
+    source_files = find_source_files(src_path)
 
     # source_files = ["/root/linux_6_6/net/ipv4/tcp.c"]
     # source_files = ["/root/linux_6_6/lib/zstd/decompress/zstd_decompress_internal.h"]
-    source_files = ["/root/linux_6_6/arch/alpha/include/asm/dma.h"]
+    # source_files = ["/root/linux_6_6/arch/alpha/include/asm/dma.h"]
 
 
     k_files = []
     for _file in source_files:
-        _k_file = K_File(_file, dir_path)
+        _k_file = K_File(_file, src_path)
         _k_file.parse_func()
         _k_file.parse_ifmacro()
         _k_file.parse_func_config_relevance()
-        # print(_k_file.to_json_detail())
 
         k_files.append(_k_file)
 
@@ -129,6 +159,13 @@ def main():
     parse_path_func(k_files, archive_path)
     parse_config_func(k_files, archive_path)
     parse_config_code(k_files, archive_path)
+
+    ## find code relative to arch
+    if args.relate_arch:
+        arch_configs = find_configs(args.configs)
+        for _k_file in k_files:
+            _k_file.parse_code_arch_relevance(arch_configs)
+        parse_arch_releated_config_code(k_files, archive_path)
 
 
 def init():

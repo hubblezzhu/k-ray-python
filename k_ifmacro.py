@@ -1,5 +1,7 @@
 import re
 import json
+import sys
+import logging
 
 class K_IfMacro():
 
@@ -13,6 +15,9 @@ class K_IfMacro():
         self._macros = []
         self._configs = []
 
+        # macro relative with arch
+        self._is_arch_relative = False
+        self._arch_related_configs = []
 
     def get_name(self):
         return self._str
@@ -28,6 +33,12 @@ class K_IfMacro():
 
     def get_configs(self):
         return self._configs
+
+    def get_arch_related_configs(self):
+        return self._arch_related_configs
+
+    def is_arch_relative(self):
+        return self._is_arch_relative
 
     def set_line_end(self, line_end):
         self._l_endif = line_end
@@ -49,6 +60,92 @@ class K_IfMacro():
     def parse_config(self):
         pattern = re.compile(r'CONFIG_[_A-Za-z0-9]+')
         self._configs = pattern.findall(self._str)
+
+    def parse_arch_relevance(self, arch_configs):
+        # if macro not contain configs, it's not related with architecture
+        # if macro not contain arch configs, it's not related with architecture
+        contain_arch_config = False
+        for _config in self._configs:
+            if _config in arch_configs:
+                contain_arch_config = True
+        if not contain_arch_config:
+            return False
+
+        macro_str = self._str
+        # negtive string
+        negtive_symbols = [
+            "ifn",
+        ]
+        for _symbol in negtive_symbols:
+            macro_str = macro_str.replace(_symbol, " not ")
+
+        # postive string
+        positive_symbols = [
+            "#if",
+            "# if",
+            "#  if",
+            "#else",
+            "# else",
+            "#  else",
+            "#elif",
+            "# elif",
+            "#  elif",
+            "#endif",
+            "# endif",
+            "#  endif",
+
+            "defined",
+            "def",
+            "IS_ENABLED",
+            "IS_BUILTIN",
+            "IS_MODULE",
+            "IS_REACHABLE",
+            "__HAS_BUILT_IN",
+            "__has_attribute",
+            "\t",
+            "\n",
+        ]
+        for _symbol in positive_symbols:
+            macro_str = macro_str.replace(_symbol, "")
+
+        # config value replace
+        for _config in self._configs:
+            if _config in arch_configs:
+                macro_str = macro_str.replace(_config, "1")
+                self._arch_related_configs.append(_config)
+            else:
+                macro_str = macro_str.replace(_config, "0")
+
+        # operator
+        macro_str = macro_str.replace("&&", "and")
+        macro_str = macro_str.replace("||", "or")
+
+        # logging.debug("==============")
+        # logging.debug("Original string:")
+        # logging.debug(self._str)
+        # logging.debug("Macro string: ")
+        # logging.debug(macro_str)
+
+        try:
+            _value = eval(macro_str)
+            logging.debug("Macro Str: {}".format(self._str))
+            logging.debug("Value: {}".format(_value))
+            if _value:
+                self._is_arch_relative = True
+        except Exception as e:
+            logging.error("==============")
+            logging.error("Original string:")
+            logging.error(self._str)
+            logging.error("Macro string: ")
+            logging.error(macro_str)
+            logging.error(f"Error evaluating macro string: {e}")
+            sys.exit()
+
+    def get_pos_config_list(self):
+        return self._postive_configs
+
+    def get_neg_config_list(self):
+        return self._negtive_configs
 
 
 # Unit Test

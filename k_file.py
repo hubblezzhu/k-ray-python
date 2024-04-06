@@ -17,10 +17,13 @@ class K_File():
         self._ifmacro_list = []
         self._func_config_relevance = {}
 
+        # macro code block releative with architecture
+        self._arch_ifmacro_list = []
+
 
     def parse_func(self):
         _cmd = "/usr/bin/ctags --fields=ne --c-types=f -o - {}".format(self._path)
-        logging.debug("[Run CMD] {}".format(_cmd))
+        # logging.debug("[Run CMD] {}".format(_cmd))
         _out = os.popen(_cmd).readlines()
         for _line in _out:
 
@@ -92,10 +95,7 @@ class K_File():
                     self._ifmacro_list.append(ifmacro)
                     ifdef_flag = False
 
-                elif line.strip().startswith("#else") or \
-                    line.strip().startswith("# else") or \
-                    line.strip().startswith("#  else") or \
-                    line.strip().startswith("#elif") or \
+                elif line.strip().startswith("#elif") or \
                     line.strip().startswith("# elif") or \
                     line.strip().startswith("#  elif"):
                     # end last #if macro
@@ -108,7 +108,25 @@ class K_File():
                     l_if_sta = line_number
                     l_if_end = line_number
                     l_endif = line_number
-                    ifmacro_str = "{} {}".format(ifmacro.get_name(), line.strip().strip("\\"))
+                    ifmacro_str = "not ({}) && {}".format(ifmacro.get_name(), line.strip().strip("\\"))
+                    ifmacro = K_IfMacro(ifmacro_str, l_if_sta, l_if_end, l_endif)
+                    ifdef_stack.append(ifmacro)
+
+                elif line.strip().startswith("#else") or \
+                    line.strip().startswith("# else") or \
+                    line.strip().startswith("#  else"):
+
+                    # end last #if macro
+                    ifmacro = ifdef_stack.pop()
+                    ifmacro.set_line_end(line_number)
+                    ifmacro.parse_config()
+                    self._ifmacro_list.append(ifmacro)
+
+                    # start a new #if macro
+                    l_if_sta = line_number
+                    l_if_end = line_number
+                    l_endif = line_number
+                    ifmacro_str = "not ({})".format(ifmacro.get_name())
                     ifmacro = K_IfMacro(ifmacro_str, l_if_sta, l_if_end, l_endif)
                     ifdef_stack.append(ifmacro)
 
@@ -145,11 +163,20 @@ class K_File():
                     for _config in _ifmacro.get_configs():
                         self._func_config_relevance[_func_name].add(_config)
 
+    def parse_code_arch_relevance(self, arch_configs):
+        for _ifmacro in self._ifmacro_list:
+            _ifmacro.parse_arch_relevance(arch_configs)
+            if _ifmacro.is_arch_relative():
+                self._arch_ifmacro_list.append(_ifmacro)
+
     def get_relative_path(self):
         return self._path.replace(self._dir_path, '', 1).strip("/")
 
     def get_ifmacro_list(self):
         return self._ifmacro_list
+
+    def get_arch_ifmacro_list(self):
+        return self._arch_ifmacro_list
 
     def get_func_list(self):
         return self._func_list

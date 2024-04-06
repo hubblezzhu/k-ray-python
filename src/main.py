@@ -10,6 +10,9 @@ from k_file import K_File
 from k_ifmacro import K_IfMacro
 
 
+REPORT_PATH="../report"
+
+
 def set_default(obj):
     if isinstance(obj, set):
         return list(obj)
@@ -106,7 +109,7 @@ def parse_config_code(k_files, archive_path):
         json.dump(config_code_res, f, indent=4, default=set_default)
 
 
-def parse_arch_releated_config_code(k_files, archive_path):
+def parse_arch_releated_config_code(k_files, archive_path, arch):
     config_code_res = []
 
     for _k_file in k_files:
@@ -121,7 +124,7 @@ def parse_arch_releated_config_code(k_files, archive_path):
             }
             config_code_res.append(_code_block)
 
-    with open(os.path.join(archive_path, "arch_releated_config_code.json"), "w") as f:
+    with open(os.path.join(archive_path, "{}_related_config_code.json".format(arch)), "w") as f:
         json.dump(config_code_res, f, indent=4, default=set_default)
 
 
@@ -131,17 +134,15 @@ def main():
     parser.add_argument("-n", "--src-name", help="Source version")
     parser.add_argument("-r", '--relate-arch', action='store_true', required=False, help="parse configs reletive to arch")
     parser.add_argument("-c", '--configs', required=False, help="arch reletive configs")
+    parser.add_argument("-A", '--arch-config', required=False, help="Specify architecture")
+
 
     args = parser.parse_args()
 
     src_path = args.src_path
     src_version = args.src_name
     source_files = find_source_files(src_path)
-
     # source_files = ["/root/linux_6_6/net/ipv4/tcp.c"]
-    # source_files = ["/root/linux_6_6/lib/zstd/decompress/zstd_decompress_internal.h"]
-    # source_files = ["/root/linux_6_6/arch/alpha/include/asm/dma.h"]
-    # source_files = ["/root/linux_6_6/drivers/scsi/qla1280.c"]
 
     k_files = []
     for _file in source_files:
@@ -152,7 +153,7 @@ def main():
 
         k_files.append(_k_file)
 
-    archive_path = os.path.join("report", src_version)
+    archive_path = os.path.join(REPORT_PATH, src_version)
     if not os.path.exists(archive_path):
         os.makedirs(archive_path)
 
@@ -165,7 +166,7 @@ def main():
         arch_configs = find_configs(args.configs)
         for _k_file in k_files:
             _k_file.parse_code_arch_relevance(arch_configs)
-        parse_arch_releated_config_code(k_files, archive_path)
+        parse_arch_releated_config_code(k_files, archive_path, args.arch)
 
 
 def init():

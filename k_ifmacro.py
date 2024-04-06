@@ -120,7 +120,7 @@ class K_IfMacro():
 
         # config value replace
         for _symbols in macro_symbols:
-            if _config in arch_configs:
+            if _symbols in arch_configs:
                 macro_str = replace_whole_word(macro_str, _config, "1")
                 self._arch_related_configs.append(_config)
             else:

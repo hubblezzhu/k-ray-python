@@ -3,6 +3,12 @@ import json
 import sys
 import logging
 
+
+def replace_whole_word(text, old_word, new_word):
+    pattern = r'\b{}\b'.format(re.escape(old_word))
+    return re.sub(pattern, new_word, text)
+
+
 class K_IfMacro():
 
     def __init__(self, macro_str, l_if_sta, l_if_end, l_endif):
@@ -111,10 +117,12 @@ class K_IfMacro():
         # config value replace
         for _config in self._configs:
             if _config in arch_configs:
-                macro_str = macro_str.replace(_config, "1")
+                # macro_str = macro_str.replace(_config, "1")
+                macro_str = replace_whole_word(macro_str, _config, "1")
                 self._arch_related_configs.append(_config)
             else:
-                macro_str = macro_str.replace(_config, "0")
+                # macro_str = macro_str.replace(_config, "0")
+                macro_str = replace_whole_word(macro_str, _config, "0")
 
         # operator
         macro_str = macro_str.replace("&&", "and")

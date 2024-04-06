@@ -80,6 +80,8 @@ class K_File():
                     ifmacro.set_macro_str("{} {}".format(ifmacro.get_name(), line.strip().strip("\\")))
                     ifmacro.set_line_end(line_number)
                     ifdef_stack.append(ifmacro)
+                    line_number += 1
+                    continue
 
                 if line.strip().startswith("#if") or \
                     line.strip().startswith("# if") or \

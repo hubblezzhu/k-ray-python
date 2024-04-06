@@ -167,7 +167,7 @@ def main():
     src_version = args.src_name
     source_files = find_source_files(src_path)
 
-    # source_files = ["/root/linux_6_6/net/ipv4/tcp.c"]
+    # source_files = ["/root/linux_6_6/arch/alpha/include/asm/irq.h"]
 
     k_files = []
     for _file in source_files:

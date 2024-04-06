@@ -81,6 +81,9 @@ class K_IfMacro():
         # negtive string
         negtive_symbols = [
             "#ifndef",
+            "# ifndef",
+            "#  ifndef",
+            "#   ifndef",
         ]
         for _symbol in negtive_symbols:
             macro_str = macro_str.replace(_symbol, "!")

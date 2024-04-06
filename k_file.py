@@ -1,5 +1,6 @@
 
 import os
+import sys
 import json
 import logging
 
@@ -65,6 +66,12 @@ class K_File():
                 #        ");
                 #
                 if "\\n\\" in line:
+                    line_number += 1
+                    continue
+
+                # skip for drivers/scsi/qla1280.c
+                # #ifdef QL_DEBUG_LEVEL_3/#endif around ENTER()/LEAVE() calls
+                if "#if" in line and "#endif" in line:
                     line_number += 1
                     continue
 
@@ -139,7 +146,11 @@ class K_File():
                 line_number += 1
 
         if ifdef_stack:
-            logging.fatal("Unexpected ifdef stack error for path {}".format(self._path))
+            logging.error("==============================================")
+            logging.error("Unexpected ifdef stack error for path {}".format(self._path))
+            for _ifmacro in ifdef_stack[::-1]:
+                logging.error("ifmacro str in stack: {}".format(_ifmacro.get_name()))
+            sys.exit()
 
     def _is_relevant(self, k_func, k_ifmacro):
         k_func_sta = k_func.get_line_start()

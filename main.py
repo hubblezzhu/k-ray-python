@@ -141,7 +141,7 @@ def main():
     # source_files = ["/root/linux_6_6/net/ipv4/tcp.c"]
     # source_files = ["/root/linux_6_6/lib/zstd/decompress/zstd_decompress_internal.h"]
     # source_files = ["/root/linux_6_6/arch/alpha/include/asm/dma.h"]
-
+    # source_files = ["/root/linux_6_6/drivers/scsi/qla1280.c"]
 
     k_files = []
     for _file in source_files:

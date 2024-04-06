@@ -128,12 +128,7 @@ class K_IfMacro():
         macro_str = macro_str.replace("&&", "and")
         macro_str = macro_str.replace("||", "or")
         macro_str = macro_str.replace("!", " not ")
-
-        # logging.debug("==============")
-        # logging.debug("Original string:")
-        # logging.debug(self._str)
-        # logging.debug("Macro string: ")
-        # logging.debug(macro_str)
+        macro_str = macro_str.replace("==", "and")
 
         try:
             _value = eval(macro_str)

@@ -1,6 +1,7 @@
 
 
 import os
+import re
 import argparse
 
 import json
@@ -9,9 +10,7 @@ import logging
 from k_file import K_File
 from k_ifmacro import K_IfMacro
 
-
 REPORT_PATH="../report"
-
 
 def set_default(obj):
     if isinstance(obj, set):
@@ -109,7 +108,7 @@ def parse_config_code(k_files, archive_path):
         json.dump(config_code_res, f, indent=4, default=set_default)
 
 
-def parse_arch_releated_config_code(k_files, archive_path, arch):
+def parse_arch_related_config_code(k_files, archive_path, arch):
     config_code_res = []
 
     for _k_file in k_files:
@@ -128,6 +127,33 @@ def parse_arch_releated_config_code(k_files, archive_path, arch):
         json.dump(config_code_res, f, indent=4, default=set_default)
 
 
+def parse_arch_related_config_file(archive_path, arch, dir_path):
+    config_file_res = {}
+
+    kbuildparse = "../3rd/kbuildparser/kbuildparser"
+
+    dir_path = os.path.relpath(dir_path, start="./")
+    cmd = "python2 {} -a {} {}".format(kbuildparse, arch, dir_path)
+    out = os.popen(cmd).readlines()
+
+    for line in out:
+        substrs = line.strip().split("<-")
+        if len(substrs) <= 1:
+            continue
+        file_path = substrs[0]
+
+        pattern = re.compile(r'CONFIG_[_A-Za-z0-9]+')
+        configs = pattern.findall(substrs[1])
+
+        for _config in configs:
+            if _config not in config_file_res:
+                config_file_res[_config] = set()
+            config_file_res[_config].add(file_path.replace(dir_path, "").strip("/"))
+
+    with open(os.path.join(archive_path, "{}_related_config_file.json".format(arch)), "w") as f:
+        json.dump(config_file_res, f, indent=4, default=set_default)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--src-path", help="Path to the source dir")
@@ -140,6 +166,7 @@ def main():
     src_path = args.src_path
     src_version = args.src_name
     source_files = find_source_files(src_path)
+
     # source_files = ["/root/linux_6_6/net/ipv4/tcp.c"]
 
     k_files = []
@@ -164,13 +191,16 @@ def main():
         with open(args.config_file, "r") as config_file:
             arch_dicts = json.load(config_file)
             for arch in arch_dicts:
+
+                # parse code block relative to arch
                 arch_config_file_path = arch_dicts[arch]
-                arch_configs = find_configs(_arch_config_file_path)
+                arch_configs = find_configs(arch_config_file_path)
                 for _k_file in k_files:
                     _k_file.parse_code_arch_relevance(arch_configs)
+                parse_arch_related_config_code(k_files, archive_path, arch)
 
-                parse_arch_releated_config_code(k_files, archive_path, arch)
-
+                # parse file relative to arch
+                parse_arch_related_config_file(archive_path, arch, src_path)
 
 def init():
     logging.basicConfig(level=logging.DEBUG)
